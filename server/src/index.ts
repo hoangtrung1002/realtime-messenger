@@ -1,11 +1,15 @@
 import "dotenv/config";
-import express, { Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { Env } from "./config/env.config";
-import { asyncHandler } from "./middlewares/asyncHandler.middleware";
-import { HTTPSTATUS } from "./config/http.config";
+import express, { Request, Response } from "express";
+import passport from "passport";
 import connectDatabase from "./config/database.config";
+import { Env } from "./config/env.config";
+import { HTTPSTATUS } from "./config/http.config";
+import "./config/passport.config";
+import { asyncHandler } from "./middlewares/asyncHandler.middleware";
+import router from "./routes";
+import { errorHandler } from "./middlewares/errorHandler.middleware";
 
 const app = express();
 
@@ -18,6 +22,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(passport.initialize());
 
 app.get(
   "/demo",
@@ -28,6 +33,10 @@ app.get(
     });
   })
 );
+
+app.use("/api", router);
+
+app.use(errorHandler);
 
 app.listen(Env.PORT, async () => {
   await connectDatabase();
