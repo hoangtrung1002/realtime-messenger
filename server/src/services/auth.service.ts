@@ -10,7 +10,12 @@ export const registerService = async (body: registerSchemaType) => {
   const existUser = await UserModel.findOne({ email });
   if (existUser) throw new UnauthorizedException("User already exist");
 
-  const newUser = new UserModel({ ...body });
+  const newUser = new UserModel({
+    name: body.name,
+    email: body.email,
+    password: body.password,
+    avatar: body.avatar,
+  });
   await newUser.save();
   return newUser;
 };
