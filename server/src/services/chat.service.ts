@@ -1,8 +1,10 @@
+import { id } from "zod/v4/locales";
 import ChatModel from "../models/chat.model";
 import MessageModel from "../models/message.model";
 import UserModel from "../models/User.model";
 import { BadRequestException, NotFoundException } from "../utils/app-error";
 import { createChatSchemaType } from "../validators/chat.validator";
+import { emitNewChatToParticipants } from "../lib/socket";
 
 export const createChatService = async (
   userId: string,
@@ -38,7 +40,12 @@ export const createChatService = async (
       createdBy: userId,
     });
   }
-  //   TODO: Implement websocket
+  const populatedChat = await chat?.populate("participants", "name avatar");
+  const participantIdStrings = populatedChat?.participants?.map((p) =>
+    p._id.toString()
+  );
+
+  emitNewChatToParticipants(participantIdStrings, populatedChat);
 
   return chat;
 };
@@ -79,4 +86,16 @@ export const getSingleChatService = async (chatId: string, userId: string) => {
     .sort({ createdAt: 1 });
 
   return { chat, messages };
+};
+
+export const validateChatParticipants = async (
+  chatId: string,
+  userId: string
+) => {
+  const chat = await ChatModel.findOne({
+    _id: chatId,
+    participants: { $in: [userId] },
+  });
+  if (!chat) throw new BadRequestException("User not a participants in chat");
+  return chat;
 };

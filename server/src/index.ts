@@ -1,17 +1,23 @@
-import "dotenv/config";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import "dotenv/config";
 import express, { Request, Response } from "express";
+import http from "http";
 import passport from "passport";
 import connectDatabase from "./config/database.config";
 import { Env } from "./config/env.config";
 import { HTTPSTATUS } from "./config/http.config";
 import "./config/passport.config";
+import { initializeSocket } from "./lib/socket";
 import { asyncHandler } from "./middlewares/asyncHandler.middleware";
-import router from "./routes";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
+import router from "./routes";
 
 const app = express();
+// create a raw http server to attach websocket connection
+const server = http.createServer(app);
+
+initializeSocket(server);
 
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
@@ -38,7 +44,7 @@ app.use("/api", router);
 
 app.use(errorHandler);
 
-app.listen(Env.PORT, async () => {
+server.listen(Env.PORT, async () => {
   await connectDatabase();
   console.log(`Server running on port ${Env.PORT} in ${Env.NODE_ENV} mode`);
 });
