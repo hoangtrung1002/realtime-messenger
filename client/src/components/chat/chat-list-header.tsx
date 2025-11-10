@@ -5,7 +5,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "../ui/input-group";
-import NewChatPopover from "./newchat-popover";
+import { NewChatPopover } from "./newchat-popover";
 
 interface Props {
   onSearch: (value: string) => void;
@@ -20,9 +20,9 @@ const ChatListHeader = ({ onSearch }: Props) => {
           <NewChatPopover />
         </div>
       </div>
-      <div>
+      <div className="space-y-2">
         <Input className="bg-background text-sm" />
-        <InputGroup className="bg-background text-sm">
+        <InputGroup className="bg-background text-sm ">
           <InputGroupInput
             placeholder="Search..."
             onChange={(e) => onSearch(e.target.value)}

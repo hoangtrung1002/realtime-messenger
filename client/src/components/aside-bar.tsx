@@ -20,8 +20,8 @@ const AsideBar = () => {
   const isOnline = isUserOnline(user?._id);
 
   return (
-    <aside className="top-0 fixed inset-y-0 w-11 left-0 z-50 h-svh bg-primary/85 shadow-sm">
-      <div className="w-full h-full px-1 pt-1 pb-6 flex flex-col items-center justify-between">
+    <aside className="top-0 fixed inset-y-0 w-12 left-0 z-999 h-svh bg-primary/85 shadow-sm">
+      <div className="w-full h-full px-1 pt-1 pb-6 flex flex-col items-center justify-between ">
         <Logo
           url={PROTECTED_ROUTES.CHAT}
           imgClass="size-7"

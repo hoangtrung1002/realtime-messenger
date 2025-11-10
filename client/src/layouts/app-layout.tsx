@@ -6,6 +6,7 @@ const AppLayout = () => {
   return (
     <AppWrapper>
       <div className="h-full">
+        {/* ChatList */}
         <div className="block">
           <ChatList />
         </div>
