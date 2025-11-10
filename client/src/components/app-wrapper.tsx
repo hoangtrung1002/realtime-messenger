@@ -1,7 +1,10 @@
+import AsideBar from "./aside-bar";
+
 const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="h-full">
-      <main className="h-full">{children}</main>
+      <AsideBar />
+      <main className="lg:pl-10 h-full">{children}</main>
     </div>
   );
 };
